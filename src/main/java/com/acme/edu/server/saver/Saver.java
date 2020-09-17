@@ -9,4 +9,6 @@ public interface Saver {
     void save(ChatMessage msg) throws IOException;
 
     String getFileName();
+
+    void close() throws IOException;
 }
