@@ -9,7 +9,7 @@ public class ChatMessageTest {
     public void shouldCorrectlyParseSendMessageWhenCorrectMessage () {
         String message = "/snd Hello";
 
-        ChatMessage chatMessage = new ChatMessage(message, "1", System.currentTimeMillis());
+        ChatMessage chatMessage = new ChatMessage(message, "str1", System.currentTimeMillis());
 
         assertThat(chatMessage.getMessageType()).isEqualTo("/snd");
         assertThat(chatMessage.getMessageText()).isEqualTo("Hello");
@@ -19,7 +19,7 @@ public class ChatMessageTest {
     public void shouldCorrectlyParseChidMessageWhenCorrectMessage () {
         String message = "/chid Name";
 
-        ChatMessage chatMessage = new ChatMessage(message, "1", System.currentTimeMillis());
+        ChatMessage chatMessage = new ChatMessage(message, "str1", System.currentTimeMillis());
 
         assertThat(chatMessage.getMessageType()).isEqualTo("/chid");
         assertThat(chatMessage.getChid()).isEqualTo("Name");
@@ -32,12 +32,10 @@ public class ChatMessageTest {
         String message3 = "/exit Name";
         String message4 = "habberdashery";
 
-
-        ChatMessage chatMessage1 = new ChatMessage(message1, "1", System.currentTimeMillis());
-        ChatMessage chatMessage2 = new ChatMessage(message2, "1", System.currentTimeMillis());
-        ChatMessage chatMessage3 = new ChatMessage(message3, "1", System.currentTimeMillis());
-        ChatMessage chatMessage4 = new ChatMessage(message4, "1", System.currentTimeMillis());
-
+        ChatMessage chatMessage1 = new ChatMessage(message1,"str1" ,  System.currentTimeMillis());
+        ChatMessage chatMessage2 = new ChatMessage(message2, "str1", System.currentTimeMillis());
+        ChatMessage chatMessage3 = new ChatMessage(message3, "str1", System.currentTimeMillis());
+        ChatMessage chatMessage4 = new ChatMessage(message4, "str1", System.currentTimeMillis());
 
         assertThat(chatMessage1.isCommandAvailiable()).isTrue();
         assertThat(chatMessage2.isCommandAvailiable()).isTrue();
