@@ -1,5 +1,7 @@
 package com.acme.edu.server;
 
+import main.java.com.acme.edu.server.MessageGetter;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,9 +17,8 @@ public class Server {
                      new BufferedOutputStream(
                              clientConnection.getOutputStream()))) {
 
-            final String readLine = input.readUTF();
-            out.writeUTF("!!! " + readLine);
-            out.flush();
+            MessageGetter getter = new MessageGetter();
+            getter.getMessage(input, out);
 
 
         } catch (IOException e) {
