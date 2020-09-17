@@ -7,6 +7,17 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <distributionManagement>
+        <repository>
+            <id>artId</id>
+            <url>http://81.163.25.104:8081/artifactory/com.acme</url>
+        </repository>
+        <snapshotRepository>
+            <id>artId</id>
+            <url>http://81.163.25.104:8081/artifactory/com.acme</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -124,3 +135,5 @@
         </dependency>
     </dependencies>
 </project>
+
+
