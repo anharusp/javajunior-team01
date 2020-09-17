@@ -2,33 +2,79 @@ package com.acme.edu.message;
 
 import com.acme.edu.server.command.CommandParserException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ChatMessage {
     private String chid;
     private String messageText;
     private String messageType;
     private long messageDateTimeMilliseconds;
+    private boolean isOpen = true;
 
     public ChatMessage(String message, long messageDateTimeMilliseconds) {
         detectCommand(message);
         this.messageDateTimeMilliseconds = messageDateTimeMilliseconds;
     }
 
+    @Override
+    public String toString() {
+        return decorateDateTime() + decoratedId() + messageText;
+    }
+
+    public String getChid() {
+        return chid;
+    }
+
+    public String getMessageText() {
+        return messageText;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public long getMessageDateTimeMilliseconds() {
+        return messageDateTimeMilliseconds;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     private void detectCommand(String message){
         try {
             this.messageType = message.split(" ", 2)[0];
-            this.messageText = message.split(" ", 2)[1];
+            switch (messageType) {
+                case "/snd":
+                    this.messageText = message.split(" ", 2)[1];
+                    break;
+                case "/chid":
+                    this.chid = message.split(" ", 2)[1];
+                    break;
+                case "/exit":
+                    this.isOpen = false;
+                    break;
+                default:
+                    break;
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No comand detcted");
+            System.out.println("No such command detected");
         }
     }
 
-    @Override
-    public String toString() {
-        return "ChatMessage{" +
-                "chid='" + chid + '\'' +
-                ", messageText='" + messageText + '\'' +
-                ", messageType='" + messageType + '\'' +
-                ", messageDateTimeMilliseconds=" + messageDateTimeMilliseconds +
-                '}';
+    private boolean isCommandAvailiable(){
+        return "/snd".equals(messageType) || "/hist".equals(messageType) || "/exit".equals(messageType) || "/chid".equals(messageType);
+    }
+
+    private String decorateDateTime() {
+        Date currentDate = new Date(messageDateTimeMilliseconds);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss ");
+        return df.format(currentDate);
+    }
+
+    private String decoratedId() {
+        return "(" + chid + "): ";
     }
 }
