@@ -12,7 +12,7 @@ import java.util.List;
 public class Logger {
     Saver saver;
 
-    public Logger() throws FileNotFoundException {
+    public Logger() throws IOException {
         saver = new FileSaver("history.log");
     }
 
@@ -25,9 +25,15 @@ public class Logger {
         try (BufferedReader fileIn =
                      new BufferedReader(new FileReader(saver.getFileName()))) {
             while (fileIn.ready()) {
-                result.add(fileIn.readLine());
+                String tmp = fileIn.readLine();
+                result.add(tmp);
+                System.out.println("from get History" + tmp);
             }
-            return result;
         }
+        return result;
     }
+    public void close() throws IOException {
+        saver.close();
+    }
+
 }

@@ -7,23 +7,11 @@ import main.java.com.acme.edu.server.MessageGetter;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class Server {
-    static Logger logger;
 
-    static {
-        try {
-            logger = new Logger();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Server() throws FileNotFoundException {
-
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         Gson gson = new Gson();
 
         try (final ServerSocket connectionPortListener = new ServerSocket(10_000);
@@ -36,13 +24,15 @@ public class Server {
                              clientConnection.getOutputStream()))) {
             while(clientConnection.isConnected()) {
                 String json = input.readUTF();
-
+                Logger logger = new Logger();
                 ChatMessage message = gson.fromJson(json, ChatMessage.class);
 
                 if ("/hist".equals(message.getMessageType())) {
-                    logger.getHistory().forEach(s -> {
+                    List<String> res = logger.getHistory();
+                    res.forEach(s -> {
                         try {
                             out.writeUTF(s);
+                            out.flush();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -50,14 +40,14 @@ public class Server {
                 }
                 else if ("/snd".equals(message.getMessageType())) {
                     logger.log(message);
-                    out.writeUTF("Received Message " + message);
+                    out.writeUTF(message.toString());
                     out.flush();
                 }
-
+                logger.close();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

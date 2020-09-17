@@ -25,7 +25,7 @@ public class Client {
             while(connection.isConnected()) {
                 message = br.readLine();
                 ChatMessage chatMessage = new ChatMessage(message, System.currentTimeMillis());
-                if (chatMessage.isCommandAvailiable()){
+                if (chatMessage.isCommandAvailiable()) {
                     out.writeUTF(gson.toJson(chatMessage));
                 }
                 else {
@@ -33,7 +33,10 @@ public class Client {
                     continue;
                 }
                 out.flush();
-                System.out.println(">> " + input.readUTF());
+                System.out.println(input.readUTF());
+                while (input.available() > 0) {
+                        System.out.println(input.readUTF());
+                }
             }
             br.close();
         } catch (IOException e) {

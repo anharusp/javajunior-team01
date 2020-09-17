@@ -7,27 +7,32 @@ import java.io.*;
 public class FileSaver implements Saver {
     String fileName;
     boolean append = true;
-    private final BufferedWriter bufferedWriter;
+    private final OutputStreamWriter Writer;
 
-    public FileSaver(String s) throws FileNotFoundException {
+    public FileSaver(String s) throws IOException {
         fileName = s;
-        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,  append)));
+        this.Writer = new OutputStreamWriter(new FileOutputStream(fileName,  append));
     }
 
     public  FileSaver(String s, boolean a) throws FileNotFoundException {
         fileName = s;
         append = a;
-        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,  append)));
+        this.Writer = new OutputStreamWriter(new FileOutputStream(fileName,  append));
     }
 
     @Override
     public void save(ChatMessage msg) throws IOException {
-        bufferedWriter.write(msg.toString());
-        bufferedWriter.newLine();
-        //bufferedWriter.flush();
+        System.out.println("from saver" + msg);
+
+        Writer.write(msg.toString() + System.lineSeparator());
+
     }
 
     public String getFileName() {
         return fileName;
+    }
+
+    public void close() throws IOException {
+        Writer.close();
     }
 }
