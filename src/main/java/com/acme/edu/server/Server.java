@@ -38,6 +38,7 @@ public class Server {
                 else {
                     logger.log(message);
                 }
+
             }
 
         } catch (IOException e) {
