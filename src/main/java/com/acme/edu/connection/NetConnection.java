@@ -38,12 +38,4 @@ public class NetConnection implements Closeable{
         input.close();
         netSocket.close();
     }
-
-    public DataInputStream getInput() {
-        return input;
-    }
-
-    public DataOutputStream getOutput() {
-        return output;
-    }
 }
