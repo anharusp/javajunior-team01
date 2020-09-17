@@ -9,8 +9,8 @@ public class CommandParser {
     }
 
     public static boolean isKnownCommand(String commandString) {
-        String command = commandString.split(" ", 1)[0];
-        return command == "/snd" || command == "/hist" || command == "/exit";
+        String command = commandString.split(" ", 2)[0];
+        return "/snd".equals(command) || "/hist".equals(command) || "/exit".equals(command);
     }
 
     public Command parse(String commandString) throws CommandParserException {

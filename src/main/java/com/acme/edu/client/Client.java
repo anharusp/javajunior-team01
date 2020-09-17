@@ -1,5 +1,6 @@
 package com.acme.edu.client;
 
+import com.acme.edu.server.command.Command;
 import com.acme.edu.server.command.CommandParser;
 
 import java.io.*;
@@ -21,10 +22,11 @@ public class Client {
                      new BufferedOutputStream(
                              connection.getOutputStream()));
         ) {
-
+            br = new BufferedReader (new InputStreamReader(System.in));
             while(connection.isConnected()) {
                 message = br.readLine();
-                if (CommandParser.isKnownCommand(message))
+                CommandParser commandParser = new CommandParser(message);
+                if (commandParser.isKnownCommand(message))
                     out.writeUTF(decorateMessage(message));
                 else {
                     System.out.println("Wrong Command! Try again");
