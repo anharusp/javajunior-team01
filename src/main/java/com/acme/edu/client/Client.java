@@ -27,6 +27,7 @@ public class Client {
             br = new BufferedReader (new InputStreamReader(System.in));
             while(connection.isConnected()) {
                 message = br.readLine();
+
                 ChatMessage chatMessage = new ChatMessage(message, chid, System.currentTimeMillis());
                 if (!chid.equals(chatMessage.getChid())) {
                     chid = chatMessage.getChid();
@@ -40,7 +41,10 @@ public class Client {
                         continue;
                     }
                     out.flush();
-                    System.out.println(">> " + input.readUTF());
+                    System.out.println(input.readUTF());
+                    while (input.available() > 0) {
+                        System.out.println(input.readUTF());
+                    }
                 }
             }
             br.close();
