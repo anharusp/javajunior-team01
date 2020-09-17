@@ -56,15 +56,13 @@ public class ChatMessage {
                 case "/exit":
                     this.isOpen = false;
                     break;
-                default:
-                    break;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No such command detected");
         }
     }
 
-    private boolean isCommandAvailiable(){
+    public boolean isCommandAvailiable(){
         return "/snd".equals(messageType) || "/hist".equals(messageType) || "/exit".equals(messageType) || "/chid".equals(messageType);
     }
 
