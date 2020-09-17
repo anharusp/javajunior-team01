@@ -2,7 +2,6 @@ package com.acme.edu.server;
 
 import com.acme.edu.message.ChatMessage;
 import com.google.gson.Gson;
-import main.java.com.acme.edu.server.MessageGetter;
 
 import java.io.*;
 import java.net.ServerSocket;
