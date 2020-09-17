@@ -32,12 +32,10 @@ public class ChatMessageTest {
         String message3 = "/exit Name";
         String message4 = "habberdashery";
 
-
         ChatMessage chatMessage1 = new ChatMessage(message1,"str1" ,  System.currentTimeMillis());
         ChatMessage chatMessage2 = new ChatMessage(message2, "str1", System.currentTimeMillis());
         ChatMessage chatMessage3 = new ChatMessage(message3, "str1", System.currentTimeMillis());
         ChatMessage chatMessage4 = new ChatMessage(message4, "str1", System.currentTimeMillis());
-
 
         assertThat(chatMessage1.isCommandAvailiable()).isTrue();
         assertThat(chatMessage2.isCommandAvailiable()).isTrue();
