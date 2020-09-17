@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class NetConnection implements Closeable{
-    Socket netSocket;
+    private Socket netSocket;
     private DataInputStream input = null;
     private DataOutputStream output = null;
 
