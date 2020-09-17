@@ -1,7 +1,5 @@
 package com.acme.edu.message;
 
-import com.acme.edu.server.command.CommandParserException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
