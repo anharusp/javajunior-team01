@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class NetConnection implements Closeable{
-    Socket netSocket;
+    private Socket netSocket;
     private DataInputStream input = null;
     private DataOutputStream output = null;
 
@@ -23,5 +23,13 @@ public class NetConnection implements Closeable{
         output.close();
         input.close();
         netSocket.close();
+    }
+
+    public DataInputStream getInput() {
+        return input;
+    }
+
+    public DataOutputStream getOutput() {
+        return output;
     }
 }

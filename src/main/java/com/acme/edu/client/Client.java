@@ -1,5 +1,6 @@
 package com.acme.edu.client;
 
+import com.acme.edu.connection.NetConnection;
 import com.acme.edu.message.ChatMessage;
 import com.google.gson.Gson;
 
@@ -14,16 +15,10 @@ public class Client {
 
     public static void main(String[] args) {
         Gson gson = new Gson();
-        Random rand = new Random();
-        chid = "id" + rand.nextInt(10000000);
+        chid = createRandomUserId();
         try (final Socket connection = new Socket("127.0.0.1", 10_000);
-             final DataInputStream input = new DataInputStream(
-                     new BufferedInputStream(
-                             connection.getInputStream()));
-             final DataOutputStream out = new DataOutputStream(
-                     new BufferedOutputStream(
-                             connection.getOutputStream()));
         ) {
+            NetConnection clientConnection = new NetConnection(connection);
             br = new BufferedReader (new InputStreamReader(System.in));
             while(connection.isConnected()) {
                 message = br.readLine();
@@ -34,20 +29,21 @@ public class Client {
                     System.out.println("Id successfully changed");
                 } else {
                     if (chatMessage.isCommandAvailiable()){
-                        out.writeUTF(gson.toJson(chatMessage));
+                        clientConnection.getOutput().writeUTF(gson.toJson(chatMessage));
                     }
                     else {
                         System.out.println("Wrong Command! Try again");
                         continue;
                     }
                     if ("/exit".equals(chatMessage.getMessageType())) {
-                        out.writeUTF(gson.toJson(chatMessage));
+                        clientConnection.getOutput().writeUTF(gson.toJson(chatMessage));
+                        clientConnection.close();
                         break;
                     }
-                    out.flush();
-                    System.out.println(input.readUTF());
-                    while (input.available() > 0) {
-                        System.out.println(input.readUTF());
+                    clientConnection.getOutput().flush();
+                    System.out.println(clientConnection.getInput().readUTF());
+                    while (clientConnection.getInput().available() > 0) {
+                        System.out.println(clientConnection.getInput().readUTF());
                     }
                 }
             }
@@ -55,5 +51,10 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String createRandomUserId() {
+        Random rand = new Random();
+        return "id" + rand.nextInt(10000000);
     }
 }
