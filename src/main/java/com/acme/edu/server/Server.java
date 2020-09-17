@@ -51,9 +51,8 @@ public class Server {
                 else if ("/snd".equals(message.getMessageType())) {
                     logger.log(message);
                     out.writeUTF("Received Message " + message);
-                    out.flush();
                 }
-
+                out.flush();
             }
 
         } catch (IOException e) {
