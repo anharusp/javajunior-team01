@@ -17,10 +17,6 @@ public class Server {
                      new BufferedOutputStream(
                              clientConnection.getOutputStream()))) {
 
-//            final String readLine = input.readUTF();
-//            out.writeUTF("!!! " + readLine);
-//            out.flush();
-
             MessageGetter getter = new MessageGetter();
             getter.getMessage(input, out);
 

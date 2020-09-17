@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Client {
+    private static String message;
+    private static BufferedReader br;
+
     public static void main(String[] args) {
         try (final Socket connection = new Socket("127.0.0.1", 10_000);
              final DataInputStream input = new DataInputStream(
@@ -17,19 +20,18 @@ public class Client {
                              connection.getOutputStream()));
         ) {
 
-            System.out.println(connection.getLocalPort());
-            out.writeUTF("HW!!!"); //LOG INT 5
-            out.flush();
-            System.out.println(">> " + input.readUTF());
-
-            /*
-            zamestitel.log(5);
-            zamestitel.flush();
-            zamestitel.close();
-            */
-
-            String test = decorateMessage("hi");
-            System.out.println(test);
+            while(connection.isConnected()) {
+                message = br.readLine();
+                if (CommandParser.isKnownCommand(message))
+                    out.writeUTF(decorateMessage(message));
+                else {
+                    System.out.println("Wrong Command! Try again");
+                    continue;
+                }
+                out.flush();
+                System.out.println(">> " + input.readUTF()); //server logging???
+            }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
