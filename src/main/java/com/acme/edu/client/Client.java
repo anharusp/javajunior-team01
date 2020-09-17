@@ -40,6 +40,10 @@ public class Client {
                         System.out.println("Wrong Command! Try again");
                         continue;
                     }
+                    if ("/exit".equals(chatMessage.getMessageType())) {
+                        out.writeUTF(gson.toJson(chatMessage));
+                        break;
+                    }
                     out.flush();
                     System.out.println(input.readUTF());
                     while (input.available() > 0) {

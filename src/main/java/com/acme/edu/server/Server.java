@@ -27,6 +27,13 @@ public class Server {
                 Logger logger = new Logger();
                 ChatMessage message = gson.fromJson(json, ChatMessage.class);
 
+                if ("/exit".equals(message.getMessageType())) {
+                    logger.log(message);
+                    out.writeUTF(message.toString());
+                    out.flush();
+                    break;
+                }
+
                 if ("/hist".equals(message.getMessageType())) {
                     List<String> res = logger.getHistory();
                     res.forEach(s -> {
@@ -40,7 +47,6 @@ public class Server {
                 }
                 else if ("/snd".equals(message.getMessageType())) {
                     logger.log(message);
-
                     out.writeUTF(message.toString());
                     out.flush();
                 }

@@ -27,7 +27,6 @@ public class Logger {
             while (fileIn.ready()) {
                 String tmp = fileIn.readLine();
                 result.add(tmp);
-                System.out.println("from get History" + tmp);
             }
         }
         return result;

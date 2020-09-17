@@ -22,9 +22,7 @@ public class FileSaver implements Saver {
 
     @Override
     public void save(ChatMessage msg) throws IOException {
-        System.out.println("from saver" + msg);
-
-        Writer.write(msg.toString() + System.lineSeparator());
+       Writer.write(msg.toString() + System.lineSeparator());
 
     }
 
