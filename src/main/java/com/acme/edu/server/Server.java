@@ -40,11 +40,12 @@ public class Server {
                 }
                 else if ("/snd".equals(message.getMessageType())) {
                     logger.log(message);
+
                     out.writeUTF(message.toString());
                     out.flush();
                 }
                 logger.close();
-            }
+          }
         } catch (IOException e) {
             e.printStackTrace();
         }
