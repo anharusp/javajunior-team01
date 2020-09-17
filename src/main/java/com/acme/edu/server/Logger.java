@@ -1,5 +1,6 @@
 package com.acme.edu.server;
 
+import com.acme.edu.message.ChatMessage;
 import com.acme.edu.server.saver.FileSaver;
 import com.acme.edu.server.saver.Saver;
 
