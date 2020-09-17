@@ -25,7 +25,6 @@ public class Client {
             while(connection.isConnected()) {
                 message = br.readLine();
                 ChatMessage chatMessage = new ChatMessage(message, System.currentTimeMillis());
-                System.out.println(chatMessage);
                 if (chatMessage.isCommandAvailiable()){
                     out.writeUTF(gson.toJson(chatMessage));
                 }

@@ -1,5 +1,7 @@
 package com.acme.edu.server.saver;
 
+import com.acme.edu.message.ChatMessage;
+
 import java.io.*;
 
 public class FileSaver implements Saver {
