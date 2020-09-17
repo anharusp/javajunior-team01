@@ -11,25 +11,40 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class Server {
 
     public static void main(String[] args)  {
-        try (final ServerSocket connectionPortListener = new ServerSocket(10_000);
-             final NetConnection clientConnection = new NetConnection(connectionPortListener.accept())) {
-            serveClient(clientConnection);
-        } catch (IOException e) {
+        ExecutorService pool = newFixedThreadPool(100);
+        Thread shutdownHook = new Thread(() -> pool.shutdownNow());
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        try (final ServerSocket connectionPortListener = new ServerSocket(10_000)){
+            while (true) {
+                NetConnection clientConnection = new NetConnection(connectionPortListener.accept());
+                ClientServer clientServer = new ClientServer(clientConnection);
+                pool.submit(new ClientServer(clientConnection));
+                clientConnection.close();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+}
 
+
+class ClientServer extends Thread {
+    NetConnection netConnection;
+
+    public ClientServer(NetConnection netConnection) {
+        this.netConnection = netConnection;
     }
 
-    private static void serveClient(NetConnection clientConnection) throws IOException {
+    private void serveClient(NetConnection clientConnection) throws IOException {
         Gson gson = new Gson();
         DataInputStream input = clientConnection.getInput();
-        DataOutputStream output = clientConnection.getOutput();
         while(clientConnection.isConnected()) {
             String json = input.readUTF();
             ChatMessage message = gson.fromJson(json, ChatMessage.class);
@@ -39,9 +54,17 @@ public class Server {
             } catch (UnrecognizedStrategyException e) {
                 e.printStackTrace();
             } catch (ClientExit clientExit) {
-                clientExit.printStackTrace();
                 break;
             }
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            serveClient(netConnection);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
