@@ -12,7 +12,7 @@ public class MessageGetter {
 
     public void getMessage(DataInputStream inputStream, DataOutputStream outStream) throws IOException {
         String message = inputStream.readUTF();
-        //outStream.writeUTF("Received Message " + message);
+        outStream.writeUTF("Received Message " + message);
         outStream.flush();
     }
 }

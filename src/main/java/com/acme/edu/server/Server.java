@@ -16,10 +16,10 @@ public class Server {
              final DataOutputStream out = new DataOutputStream(
                      new BufferedOutputStream(
                              clientConnection.getOutputStream()))) {
-
-            MessageGetter getter = new MessageGetter();
-            getter.getMessage(input, out);
-
+            while(clientConnection.isConnected()) {
+                MessageGetter getter = new MessageGetter();
+                getter.getMessage(input, out);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
