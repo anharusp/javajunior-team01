@@ -13,7 +13,8 @@ public class ChatMessage {
     private long messageDateTimeMilliseconds;
     private boolean isOpen = true;
 
-    public ChatMessage(String message, long messageDateTimeMilliseconds) {
+    public ChatMessage(String message, String id, long messageDateTimeMilliseconds) {
+        this.chid = id;
         detectCommand(message);
         this.messageDateTimeMilliseconds = messageDateTimeMilliseconds;
     }
