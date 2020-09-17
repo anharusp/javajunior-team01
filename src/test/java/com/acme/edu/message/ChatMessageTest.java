@@ -1,8 +1,10 @@
 package com.acme.edu.message;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class ChatMessageTest {
     @Test
@@ -42,4 +44,12 @@ public class ChatMessageTest {
         assertThat(chatMessage3.isCommandAvailiable()).isTrue();
         assertThat(chatMessage4.isCommandAvailiable()).isFalse();
     }
+
+    @Test
+    public void shouldDecorateMessage() {
+        String message = "/snd Hello";
+        ChatMessage chatMessage = new ChatMessage(message, "id1", 1600363267447L);
+        assertEquals("17/09/2020 20:21:07 (id1): Hello", chatMessage.toString());
+    }
+
 }
