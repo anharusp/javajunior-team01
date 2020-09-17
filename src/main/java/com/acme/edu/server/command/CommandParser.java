@@ -8,8 +8,8 @@ public class CommandParser {
         this.commandString = commandString;
     }
 
-    public boolean isKnownCommand(String commandString) {
-        String command = this.commandString.split(" ", 1)[0];
+    public static boolean isKnownCommand(String commandString) {
+        String command = commandString.split(" ", 1)[0];
         return command == "/snd" || command == "/hist" || command == "/exit";
     }
 

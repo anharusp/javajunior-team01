@@ -1,5 +1,7 @@
 package com.acme.edu.client;
 
+import com.acme.edu.server.command.CommandParser;
+
 import java.io.*;
 import java.net.Socket;
 import java.text.DateFormat;
@@ -29,7 +31,7 @@ public class Client {
                     continue;
                 }
                 out.flush();
-                System.out.println(">> " + input.readUTF()); //server logging???
+                System.out.println(">> " + input.readUTF());
             }
             br.close();
         } catch (IOException e) {
