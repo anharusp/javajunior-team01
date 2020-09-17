@@ -2,6 +2,9 @@ package com.acme.edu.client;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Client {
     public static void main(String[] args) {
@@ -25,8 +28,17 @@ public class Client {
             zamestitel.close();
             */
 
+            String test = decorateMessage("hi");
+            System.out.println(test);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String decorateMessage(String message) {
+        long currentDateTime = System.currentTimeMillis();
+        Date currentDate = new Date(currentDateTime);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return df.format(currentDate) + ": " + message;
     }
 }
