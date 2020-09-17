@@ -1,0 +1,1 @@
+java -cp team01.jar com.acme.edu.server.Server
