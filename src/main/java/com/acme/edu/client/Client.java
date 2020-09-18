@@ -1,12 +1,13 @@
 package com.acme.edu.client;
 
 import com.acme.edu.connection.NetConnection;
-import com.acme.edu.message.ChatMessage;
-import com.google.gson.Gson;
-
 import java.io.*;
 import java.net.Socket;
-import java.util.Random;
+
+/**
+ * Main class for Client side.
+ * @author Gavrilova D., Kharitonova A., Yusufov Yu., Belyaeva A.
+ */
 
 public class Client {
     private static ClientEntity client = new ClientEntity();
