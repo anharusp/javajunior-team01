@@ -18,16 +18,18 @@ public class HistoryStrategy implements Strategy {
 
 
     private final String room;
+    private final Integer page;
 
     public HistoryStrategy(ChatMessage message) {
         room = message.getRoom();
+        page = message.getHistNumber();
     }
 
     @Override
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException {
-        Logger logger = new Logger();
+        Logger logger = new Logger(room);
         DataOutputStream output = clientConnection.getOutput();
-        List<String> res = logger.getHistory(room);
+        List<String> res = logger.getHistory(page);
         res.forEach(s -> {
             try {
                 output.writeUTF(s);

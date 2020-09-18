@@ -23,11 +23,13 @@ public class Logger {
         savers = new ArrayList<>();
         savers.add(0, new FileSaver("history_" + room + "_0.log"));
         current = 0;
+        this.room = room;
     }
     public Logger(Saver saver, String room) throws IOException {
         savers = new ArrayList<>(2);
         savers.add(0, saver);
         current = 0;
+        this.room = room;
     }
 
     public void log(@NotNull ChatMessage msg) throws IOException {
