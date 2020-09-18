@@ -7,22 +7,41 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Class for processing messages
+ */
+
 public class MessageProcessor {
     private NetConnection connection;
     private String inputMessage;
     private ClientEntity client;
-    private static BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
+    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-
+    /**
+     * Getter for connection
+     *
+     * @return {@code NetConnection} connection
+     */
     public NetConnection getConnection() {
         return connection;
     }
 
+    /**
+     * Constructor for MessageProcessor.
+     * Initializes a newly created {@code MessageProcessor} object
+     * @param connection {@code NetConnection}
+     * @param client {@code ClientEntity}
+     */
     public MessageProcessor(NetConnection connection, ClientEntity client) {
         this.connection = connection;
         this.client = client;
     }
 
+    /**
+     * Processing message while {@code clientConnection} between Server and Client is opened.
+     * @param clientConnection {@code NetConnection}
+     * @throws IOException
+     */
     public void processMessage(NetConnection clientConnection) throws IOException {
         while (clientConnection.isConnected()) {
             inputMessage = br.readLine();

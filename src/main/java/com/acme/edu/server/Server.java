@@ -10,26 +10,27 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.sql.Connection;
-import java.util.List;
+
+/**
+ * Main class for Server side.
+ * @author Gavrilova D., Kharitonova A., Yusufov Yu., Belyaeva A.
+ */
 
 public class Server {
 
     public static void main(String[] args)  {
         try (final ServerSocket connectionPortListener = new ServerSocket(10_000);
              final NetConnection clientConnection = new NetConnection(connectionPortListener.accept())) {
-            serveClient(clientConnection);
+            serverClient(clientConnection);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private static void serveClient(NetConnection clientConnection) throws IOException {
+    private static void serverClient(NetConnection clientConnection) throws IOException {
         Gson gson = new Gson();
         DataInputStream input = clientConnection.getInput();
-        DataOutputStream output = clientConnection.getOutput();
         while(clientConnection.isConnected()) {
             String json = input.readUTF();
             ChatMessage message = gson.fromJson(json, ChatMessage.class);
