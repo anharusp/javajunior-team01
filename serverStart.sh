@@ -1,1 +1,1 @@
-java -cp team01.jar com.acme.edu.server.Server
+java -cp $1:/home/anharusp/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar com.acme.edu.server.Server
