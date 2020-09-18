@@ -6,6 +6,7 @@ import com.acme.edu.message.ChatMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class for processing messages
@@ -43,6 +44,14 @@ public class MessageProcessor {
      * @throws IOException
      */
     public void processMessage(NetConnection clientConnection) throws IOException {
+        Reader reader = new Reader(() -> {
+            try {
+                readFromServer(clientConnection);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        reader.start();
         while (clientConnection.isConnected()) {
             inputMessage = br.readLine();
             ChatMessage chatMessage = new ChatMessage(inputMessage, client.getUserId(), System.currentTimeMillis());
@@ -50,6 +59,7 @@ public class MessageProcessor {
             if (chatMessage.isCommandAvailiable()) {
                 sendMessageToServer(chatMessage.toJSON(), clientConnection);
                 if ("/exit".equals(chatMessage.getMessageType())) {
+                    reader.interrupt();
                     clientConnection.close();
                     break;
                 }
@@ -64,13 +74,11 @@ public class MessageProcessor {
             }
 
             clientConnection.getOutput().flush();
-            readFromServer(clientConnection);
         }
         br.close();
     }
 
     private void readFromServer(NetConnection clientConnection) throws IOException {
-        System.out.println(clientConnection.getInput().readUTF());
         while (clientConnection.getInput().available() > 0) {
             System.out.println(clientConnection.getInput().readUTF());
         }
@@ -80,4 +88,25 @@ public class MessageProcessor {
         clientConnection.getOutput().writeUTF(jsonMessage);
     }
 
+}
+
+class Reader extends Thread {
+    private Thread actualWorker;
+    private AtomicBoolean running = new AtomicBoolean(false);
+
+    public Reader(Runnable target) {
+        this.actualWorker = new Thread(target);
+    }
+
+    public void interrupt() {
+        running.set(false);
+        actualWorker.interrupt();
+    }
+
+    public void run() {
+        running.set(true);
+        while (running.get()) {
+            actualWorker.run();
+        }
+    }
 }
