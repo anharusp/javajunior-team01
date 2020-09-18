@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-public class clientEntityTest {
+public class ClientEntityTest {
 
     @Test
     public void shouldGetNameWhenSmbAsk() {
