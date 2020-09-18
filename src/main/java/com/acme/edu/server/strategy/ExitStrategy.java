@@ -19,12 +19,12 @@ public class ExitStrategy implements Strategy {
     @Override
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException, ClientExit {
         Logger logger = new Logger();
-        DataInputStream input = clientConnection.getInput();
+        /*DataInputStream input = clientConnection.getInput();
         DataOutputStream output = clientConnection.getOutput();
         logger.log(message);
         output.writeUTF(message.toString());
         output.flush();
-        logger.close();
+        logger.close();*/
         throw new ClientExit();
     }
 }
