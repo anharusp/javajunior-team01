@@ -47,30 +47,33 @@ public class MessageProcessor {
             inputMessage = br.readLine();
             ChatMessage chatMessage = new ChatMessage(inputMessage, client.getUserId(), System.currentTimeMillis());
 
-            if (chatMessage.getChangedId()) {
-                client.setUserId(chatMessage.getChid());
-                System.out.println("UserId successfully changed");
-            } else {
-
-                if (chatMessage.isCommandAvailiable()) {
-                    sendMessageToServer(chatMessage.toJSON(), clientConnection);
-                    if ("/exit".equals(chatMessage.getMessageType())) {
-                        clientConnection.close();
-                        break;
-                    }
-                } else {
-                    System.out.println("Wrong Command! Try again");
+            if (chatMessage.isCommandAvailiable()) {
+                sendMessageToServer(chatMessage.toJSON(), clientConnection);
+                if ("/exit".equals(chatMessage.getMessageType())) {
+                    clientConnection.close();
+                    break;
+                }
+                if (chatMessage.getChangedId()) {
+                    client.setUserId(chatMessage.getChid());
+                    System.out.println("UserId successfully changed");
                     continue;
                 }
-
-                clientConnection.getOutput().flush();
-                System.out.println(clientConnection.getInput().readUTF());
-                while (clientConnection.getInput().available() > 0) {
-                    System.out.println(clientConnection.getInput().readUTF());
-                }
+            } else {
+                System.out.println("Wrong Command! Try again");
+                continue;
             }
+
+            clientConnection.getOutput().flush();
+            readFromServer(clientConnection);
         }
         br.close();
+    }
+
+    private void readFromServer(NetConnection clientConnection) throws IOException {
+        System.out.println(clientConnection.getInput().readUTF());
+        while (clientConnection.getInput().available() > 0) {
+            System.out.println(clientConnection.getInput().readUTF());
+        }
     }
 
     private static void sendMessageToServer(String jsonMessage, NetConnection clientConnection) throws IOException {
