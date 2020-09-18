@@ -3,9 +3,11 @@ package com.acme.edu.server;
 import com.acme.edu.message.ChatMessage;
 import com.acme.edu.server.saver.FileSaver;
 import com.acme.edu.server.saver.Saver;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,11 @@ public class Logger {
         saver = new FileSaver("history.log");
     }
 
-    public void log(ChatMessage msg) throws IOException {
+    public Logger(Saver customSaver) {
+        saver = customSaver;
+    }
+
+    public void log(@NotNull ChatMessage msg) throws IOException {
         saver.save(msg);
     }
 

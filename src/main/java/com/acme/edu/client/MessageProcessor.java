@@ -6,6 +6,7 @@ import com.acme.edu.message.ChatMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class for processing messages
@@ -43,38 +44,74 @@ public class MessageProcessor {
      * @throws IOException
      */
     public void processMessage(NetConnection clientConnection) throws IOException {
+        Reader reader = new Reader(() -> {
+            try {
+                readFromServer(clientConnection);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        reader.start();
         while (clientConnection.isConnected()) {
             inputMessage = br.readLine();
             ChatMessage chatMessage = new ChatMessage(inputMessage, client.getUserId(), System.currentTimeMillis());
 
-            if (chatMessage.getChangedId()) {
-                client.setUserId(chatMessage.getChid());
-                System.out.println("UserId successfully changed");
-            } else {
-
-                if (chatMessage.isCommandAvailiable()) {
-                    sendMessageToServer(chatMessage.toJSON(), clientConnection);
-                    if ("/exit".equals(chatMessage.getMessageType())) {
-                        clientConnection.close();
-                        break;
-                    }
-                } else {
-                    System.out.println("Wrong Command! Try again");
+            if (chatMessage.isCommandAvailiable()) {
+                sendMessageToServer(chatMessage.toJSON(), clientConnection);
+                if ("/exit".equals(chatMessage.getMessageType())) {
+                    reader.interrupt();
+                    clientConnection.close();
+                    break;
+                }
+                if (chatMessage.getChangedId()) {
+                    client.setUserId(chatMessage.getChid());
+                    System.out.println("UserId successfully changed");
                     continue;
                 }
-
-                clientConnection.getOutput().flush();
-                System.out.println(clientConnection.getInput().readUTF());
-                while (clientConnection.getInput().available() > 0) {
-                    System.out.println(clientConnection.getInput().readUTF());
+                if (chatMessage.isChangedRoom()) {
+                    client.setRoomId(chatMessage.getRoom());
+                    System.out.println("Room successfully changed");
+                    continue;
                 }
+            } else {
+                System.out.println("Wrong Command! Try again");
+                continue;
             }
+
+            clientConnection.getOutput().flush();
         }
         br.close();
+    }
+
+    private void readFromServer(NetConnection clientConnection) throws IOException {
+        while (clientConnection.getInput().available() > 0) {
+            System.out.println(clientConnection.getInput().readUTF());
+        }
     }
 
     private static void sendMessageToServer(String jsonMessage, NetConnection clientConnection) throws IOException {
         clientConnection.getOutput().writeUTF(jsonMessage);
     }
 
+}
+
+class Reader extends Thread {
+    private Thread actualWorker;
+    private AtomicBoolean running = new AtomicBoolean(false);
+
+    public Reader(Runnable target) {
+        this.actualWorker = new Thread(target);
+    }
+
+    public void interrupt() {
+        running.set(false);
+        actualWorker.interrupt();
+    }
+
+    public void run() {
+        running.set(true);
+        while (running.get()) {
+            actualWorker.run();
+        }
+    }
 }

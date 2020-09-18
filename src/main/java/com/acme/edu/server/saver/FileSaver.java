@@ -10,7 +10,7 @@ import java.io.*;
 public class FileSaver implements Saver {
     String fileName;
     boolean append = true;
-    private final OutputStreamWriter Writer;
+    final OutputStreamWriter Writer;
 
     /**
      * @param {@code String} fileName
@@ -25,6 +25,12 @@ public class FileSaver implements Saver {
         fileName = s;
         append = a;
         this.Writer = new OutputStreamWriter(new FileOutputStream(fileName,  append));
+    }
+
+    public FileSaver(File file) throws FileNotFoundException {
+        fileName = file.getName();
+        this.Writer = new OutputStreamWriter(new FileOutputStream(file, true));
+
     }
 
     /**

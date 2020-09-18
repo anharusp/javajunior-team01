@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class ClientEntity {
     private String userId = createRandomUserId();
+    private String roomId = "default";
 
     /**
      * Method for getting user id
@@ -19,6 +20,12 @@ public class ClientEntity {
      */
     public void setUserId(String newId) {
         this.userId = newId;
+    }
+
+    public String getRoomId() {return roomId;}
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     private String createRandomUserId() {
