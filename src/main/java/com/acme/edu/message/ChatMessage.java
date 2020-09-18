@@ -52,6 +52,10 @@ public class ChatMessage {
         return clientEntity.getUserId();
     }
 
+    public String getRoom() {
+        return clientEntity.getRoomId();
+    }
+
     /**
      * @return {@code boolean}
      */
@@ -90,6 +94,10 @@ public class ChatMessage {
         return changedId;
     }
 
+    public boolean isChangedRoom() {
+        return changedRoom;
+    }
+
     /**
      * Parsing command
      * @param {@code String} message
@@ -110,7 +118,7 @@ public class ChatMessage {
                 case "/sndp":
                     this.reciever = message.split(" ", 3)[1];
                     this.messageText = message.split(" ", 3)[2];
-                    System.out.println(messageType + " " + messageText+ " "+ reciever);
+                    break;
                 case "/chroom":
                     this.clientEntity.setRoomId(message.split(" ", 2)[1]);
                     this.changedRoom = true;

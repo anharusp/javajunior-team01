@@ -68,6 +68,11 @@ public class MessageProcessor {
                     System.out.println("UserId successfully changed");
                     continue;
                 }
+                if (chatMessage.isChangedRoom()) {
+                    client.setRoomId(chatMessage.getRoom());
+                    System.out.println("Room successfully changed");
+                    continue;
+                }
             } else {
                 System.out.println("Wrong Command! Try again");
                 continue;
