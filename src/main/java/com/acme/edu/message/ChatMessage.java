@@ -1,5 +1,7 @@
 package com.acme.edu.message;
 
+import com.acme.edu.client.Client;
+import com.acme.edu.client.ClientEntity;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
@@ -11,11 +13,13 @@ import java.util.Date;
  */
 public class ChatMessage {
     private static Gson gson = new Gson();
-    private String chid;
+    //private String chid;
     private String messageText;
     private String messageType;
     private long messageDateTimeMilliseconds;
+    private ClientEntity clientEntity = new ClientEntity();
     private boolean changedId = false;
+    private boolean changedRoom = false;
 
     /**
      * Create {@code ChatMessage} instance
@@ -24,7 +28,7 @@ public class ChatMessage {
      * @param {@code long} messageDateTimeMilliseconds
      */
     public ChatMessage(String message, String id, long messageDateTimeMilliseconds) {
-        this.chid = id;
+        this.clientEntity.setUserId(id);
         detectCommand(message);
         this.messageDateTimeMilliseconds = messageDateTimeMilliseconds;
     }
@@ -41,14 +45,15 @@ public class ChatMessage {
      * @return {@code String} current user id
      */
     public String getChid() {
-        return chid;
+        return clientEntity.getUserId();
     }
 
     /**
      * @return {@code boolean}
      */
     public boolean isCommandAvailiable(){
-        return "/snd".equals(messageType) || "/hist".equals(messageType) || "/exit".equals(messageType) || "/chid".equals(messageType);
+        return "/snd".equals(messageType) || "/hist".equals(messageType) || "/exit".equals(messageType) || "/chid".equals(messageType)
+                || "/sdnp".equals(messageType) || "/chroom".equals(messageType);
     }
 
     /**
@@ -93,11 +98,13 @@ public class ChatMessage {
                     this.messageText = message.split(" ", 2)[1];
                     break;
                 case "/chid":
-                    this.chid = message.split(" ", 2)[1];
+                    this.clientEntity.setUserId(message.split(" ", 2)[1]);
                     this.changedId = true;
                     break;
                 case "/exit":
                     break;
+                case "/chroom":
+                    this.clientEntity.setRoomId(message.split(" ", 2)[1]);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No such command detected");
@@ -111,6 +118,6 @@ public class ChatMessage {
     }
 
     private String decoratedId() {
-        return "(" + chid + "): ";
+        return "(" + clientEntity.getUserId() + "): ";
     }
 }
