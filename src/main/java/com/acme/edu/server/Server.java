@@ -28,7 +28,7 @@ public class Server {
         netConnectionSet = Collections.synchronizedSet(new HashSet<NetConnection>());
         mapNameToConnection = Collections.synchronizedMap(new HashMap<>());
         try (final ServerSocket connectionPortListener = new ServerSocket(10_000)) {
-            while (true) {
+            while (!connectionPortListener.isClosed()) {
                 makeAndServeConnection(connectionPortListener, pool);
             }
         } catch (Exception e) {
