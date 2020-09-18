@@ -42,17 +42,5 @@ public class MessageProcessorTest {
         assertThat("");
     }
 
-    @Test
-    public void shouldProcessChangeIdRequest() throws IOException {
-        String message = "/chid newId";
-        MessageProcessor processor = new MessageProcessor(connection, client);
-        MessageProcessor.setBr(br);
-
-        when(connection.isConnected()).thenReturn(true).thenReturn(false);
-        when(br.readLine()).thenReturn(message);
-        processor.processMessage(connection);
-
-        assertThat("UserId successfully changed");
-    }
 
 }
