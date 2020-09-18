@@ -9,7 +9,9 @@ public class StrategyBuilder {
             return new ExitStrategy(message);
         if ("/hist".equals(message.getMessageType()))
             return new HistoryStrategy();
-        if ("/snd".equals(message.getMessageType()) || "/sndp".equals(message.getMessageType())) {
+        if ("/sndp".equals(message.getMessageType()) || "/sndp".equals(message.getMessageType()))
+            return new PrivateSendStrategy(message);
+        if ("/snd".equals(message.getMessageType()) || "/snd".equals(message.getMessageType())) {
             return new SendStrategy(message);
         } else {
             throw new UnrecognizedStrategyException("Request not recognized");

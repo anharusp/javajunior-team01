@@ -17,7 +17,7 @@ public class HistoryStrategy implements Strategy {
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
         Logger logger = new Logger();
         DataOutputStream output = clientConnection.getOutput();
-        List<String> res = logger.getHistory();
+        List<String> res = logger.getHistory("default");
         res.forEach(s -> {
             try {
                 output.writeUTF(s);

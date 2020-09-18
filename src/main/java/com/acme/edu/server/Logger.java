@@ -18,7 +18,7 @@ public class Logger {
     Saver saver;
 
     public Logger() throws IOException {
-        saver = new FileSaver("history.log");
+        saver = new FileSaver("history_default.log");
     }
 
     public Logger(Saver customSaver) {
