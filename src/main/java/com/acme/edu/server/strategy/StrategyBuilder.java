@@ -8,7 +8,7 @@ public class StrategyBuilder {
         if ("/exit".equals(message.getMessageType()))
             return new ExitStrategy(message);
         if ("/hist".equals(message.getMessageType()))
-            return new HistoryStrategy();
+            return new HistoryStrategy(message);
         if ("/snd".equals(message.getMessageType()))
             return new SendStrategy(message);
         if ("/chid".equals(message.getMessageType())) {

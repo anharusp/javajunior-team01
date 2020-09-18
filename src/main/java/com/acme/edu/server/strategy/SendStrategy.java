@@ -21,7 +21,7 @@ public class SendStrategy implements Strategy {
 
     @Override
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException {
-        Logger logger = new Logger();
+        Logger logger = new Logger(message.getRoom());
         netConnectionSet.forEach((connection) -> {
             DataOutputStream output = connection.getOutput();
             try {
