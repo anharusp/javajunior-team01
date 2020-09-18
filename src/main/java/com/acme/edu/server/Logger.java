@@ -26,7 +26,7 @@ public class Logger {
     }
 
     public Logger(String room) throws IOException {
-        saver = new FileSaver("history" + room + ".log");
+        saver = new FileSaver("history_" + room + ".log");
     }
 
     public void log(@NotNull ChatMessage msg) throws IOException {
