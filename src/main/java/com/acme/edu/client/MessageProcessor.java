@@ -43,12 +43,14 @@ public class MessageProcessor {
      * @param clientConnection {@code NetConnection}
      * @throws IOException
      */
-    public void processMessage(NetConnection clientConnection) throws IOException {
+    public void processMessage(NetConnection clientConnection) throws MessageProcessorException, IOException{
         Reader reader = new Reader(() -> {
             try {
                 readFromServer(clientConnection);
             } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    throw new MessageProcessorException("Something wrong with connection", e);
+                } catch (MessageProcessorException ex){}
             }
         });
         reader.start();

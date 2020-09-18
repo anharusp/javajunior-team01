@@ -1,8 +1,10 @@
 package com.acme.edu.client;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class ClientEntity {
+    private Random rand = new SecureRandom();
     private String userId = createRandomUserId();
     private String roomId = "default";
 
@@ -29,7 +31,6 @@ public class ClientEntity {
     }
 
     private String createRandomUserId() {
-        Random rand = new Random();
         return "id" + rand.nextInt(10000000);
     }
 }

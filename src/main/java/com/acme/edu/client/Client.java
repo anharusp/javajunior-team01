@@ -20,7 +20,7 @@ public class Client {
             MessageProcessor processor = new MessageProcessor(clientConnection, client);
             processor.processMessage(clientConnection);
 
-        } catch (IOException e) {
+        } catch (IOException | MessageProcessorException e) {
             e.printStackTrace();
         }
 

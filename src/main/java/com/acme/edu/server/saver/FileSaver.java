@@ -9,7 +9,6 @@ import java.io.*;
  */
 public class FileSaver implements Saver {
     String fileName;
-    boolean append = true;
     final OutputStreamWriter Writer;
 
     /**
@@ -21,26 +20,20 @@ public class FileSaver implements Saver {
         this.Writer = new OutputStreamWriter(new FileOutputStream(fileName, true));
     }
 
-    public  FileSaver(String s, boolean a) throws FileNotFoundException {
-        fileName = s;
-        append = a;
-        this.Writer = new OutputStreamWriter(new FileOutputStream(fileName,  append));
-    }
-
     public FileSaver(File file) throws FileNotFoundException {
         fileName = file.getName();
         this.Writer = new OutputStreamWriter(new FileOutputStream(file, true));
-
     }
 
     /**
      * Writing message into OutputStreamWriter
+     *
      * @param {@ChatMessage} msg
      * @throws IOException
      */
     @Override
     public void save(ChatMessage msg) throws IOException {
-       Writer.write(msg.toString() + System.lineSeparator());
+        Writer.write(msg.toString() + System.lineSeparator());
     }
 
     public String getFileName() {
