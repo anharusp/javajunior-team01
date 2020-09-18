@@ -9,6 +9,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * Class implementing {@code /snd} command
+ */
 public class SendStrategy implements Strategy {
     private final ChatMessage message;
 
