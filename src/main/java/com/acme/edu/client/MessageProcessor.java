@@ -45,11 +45,7 @@ public class MessageProcessor {
      */
     public void processMessage(NetConnection clientConnection) throws IOException {
         Reader reader = new Reader(() -> {
-            try {
                 readFromServer(clientConnection);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
         reader.start();
         while (clientConnection.isConnected()) {
@@ -77,19 +73,24 @@ public class MessageProcessor {
                 System.out.println("Wrong Command! Try again");
                 continue;
             }
-
-            clientConnection.getOutput().flush();
         }
         br.close();
     }
 
-    private void readFromServer(NetConnection clientConnection) throws IOException {
-        while (clientConnection.getInput().available() > 0) {
-            System.out.println(clientConnection.getInput().readUTF());
+    private void readFromServer(NetConnection clientConnection) {
+        try {
+            while (clientConnection.getInput().available() > 0) {
+                System.out.println(clientConnection.getInput().readUTF());
+            }
+        } catch (IOException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     private static void sendMessageToServer(String jsonMessage, NetConnection clientConnection) throws IOException {
+        if (!clientConnection.isConnected()) {
+            throw new IOException();
+        }
         clientConnection.getOutput().writeUTF(jsonMessage);
     }
 
