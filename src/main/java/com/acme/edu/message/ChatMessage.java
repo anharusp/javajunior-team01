@@ -125,7 +125,7 @@ public class ChatMessage {
                     break;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No such command detected");
+            this.messageType = "/non";
         }
     }
 
