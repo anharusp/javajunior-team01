@@ -20,6 +20,7 @@ public class ChatMessage {
     private boolean changedId = false;
     private boolean changedRoom = false;
     private String reciever;
+    private int histNumber = -1;
 
     /**
      * Create {@code ChatMessage} instance
@@ -43,6 +44,10 @@ public class ChatMessage {
     public String toString() {
         if (reciever != null) return decorateDateTime() + decoratedIdWithReciever() + messageText;
         return decorateDateTime() + decoratedId() + messageText;
+    }
+
+    public int getHistNumber() {
+        return histNumber;
     }
 
     /**
@@ -119,13 +124,21 @@ public class ChatMessage {
                     this.reciever = message.split(" ", 3)[1];
                     this.messageText = message.split(" ", 3)[2];
                     break;
+                case "/hist":
+                    try {
+                        this.histNumber = Integer.parseInt(message.split(" ", 2)[1]);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        this.histNumber = -1;
+                    }
+                    System.out.println(histNumber);
+                    break;
                 case "/chroom":
                     this.clientEntity.setRoomId(message.split(" ", 2)[1]);
                     this.changedRoom = true;
                     break;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            this.messageType = "/non";
+            if (this.messageType != "/hist") this.messageType = "/non";
         }
     }
 
