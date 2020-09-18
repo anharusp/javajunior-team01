@@ -25,14 +25,18 @@ public class Logger {
         saver = customSaver;
     }
 
+    public Logger(String room) throws IOException {
+        saver = new FileSaver("history" + room + ".log");
+    }
+
     public void log(@NotNull ChatMessage msg) throws IOException {
         saver.save(msg);
     }
 
-    public List<String> getHistory() throws IOException {
+    public List<String> getHistory(String room) throws IOException {
         ArrayList<String> result = new ArrayList<>();
         try (BufferedReader fileIn =
-                     new BufferedReader(new FileReader(saver.getFileName()))) {
+                     new BufferedReader(new FileReader("history" + room + ".log"))) {
             while (fileIn.ready()) {
                 String tmp = fileIn.readLine();
                 result.add(tmp);
