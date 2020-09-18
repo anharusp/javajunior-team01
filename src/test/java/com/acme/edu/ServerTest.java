@@ -25,4 +25,6 @@ public class ServerTest implements SysoutCaptureAndAssertionAbility{
         System.out.println("hi");
         assertSysoutContains("hi");
     }
+
+
 }
