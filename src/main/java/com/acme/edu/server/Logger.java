@@ -9,6 +9,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Log received messages from Client to {@code history.log} file
+ */
 public class Logger {
     Saver saver;
 
@@ -27,11 +30,11 @@ public class Logger {
             while (fileIn.ready()) {
                 String tmp = fileIn.readLine();
                 result.add(tmp);
-                System.out.println("from get History" + tmp);
             }
         }
         return result;
     }
+
     public void close() throws IOException {
         saver.close();
     }
