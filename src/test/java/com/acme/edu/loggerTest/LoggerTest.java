@@ -21,9 +21,9 @@ public class LoggerTest {
 
     @Test
     public void shouldLogMessage() throws IOException {
-        Saver mock = mock(Saver.class);
+        FileSaver mock = mock(FileSaver.class);
         ChatMessage mockMessage = mock(ChatMessage.class);
-        Logger logger = new Logger(mock);
+        Logger logger = new Logger(mock, "default");
         logger.log(mockMessage);
         verify(mock).save(mockMessage);
     }
@@ -31,7 +31,7 @@ public class LoggerTest {
     @Test
     public void shouldGetHistoryWhenFileEmpty() throws IOException {
         Logger logger = new Logger("default");
-        assertThat(logger.getHistory("default").isEmpty());
+        assertThat(logger.getHistory(0).isEmpty());
         logger.close();
     }
 
@@ -40,8 +40,9 @@ public class LoggerTest {
         Logger logger = new Logger("default");
         ChatMessage mock = mock(ChatMessage.class);
         logger.log(mock);
-        assertThat(logger.getHistory("default").contains(mock));
+        assertThat(logger.getHistory(0).contains(mock));
         logger.close();
     }
+
 }
 

@@ -15,38 +15,61 @@ import java.util.List;
  * Log received messages from Client to {@code history.log} file
  */
 public class Logger {
-    Saver saver;
-
-    public Logger() throws IOException {
-        saver = new FileSaver("history_default.log");
-    }
-
-    public Logger(Saver customSaver) {
-        saver = customSaver;
-    }
+    ArrayList<Saver> savers;
+    int current;
+    String room;
 
     public Logger(String room) throws IOException {
-        saver = new FileSaver("history_" + room + ".log");
+        savers = new ArrayList<>();
+        savers.add(0, new FileSaver("history_" + room + "_0.log"));
+        current = 0;
+    }
+    public Logger(Saver saver, String room) throws IOException {
+        savers = new ArrayList<>(2);
+        savers.add(0, saver);
+        current = 0;
     }
 
     public void log(@NotNull ChatMessage msg) throws IOException {
-        saver.save(msg);
+        FileSaver tmp = (FileSaver) savers.get(current);
+        tmp.save(msg);
+        if (tmp.lines > 20)
+            savers.add(++current, new FileSaver("history_"+ room +"_" + current + ".log"));
     }
 
-    public List<String> getHistory(String room) throws IOException {
+    public List<String> getHistory(int page) throws IOException {
         ArrayList<String> result = new ArrayList<>();
+        FileSaver tmp = (FileSaver) savers.get(page);
+        if (page == -1)
+            return getAllHistory();
         try (BufferedReader fileIn =
-                     new BufferedReader(new FileReader("history_" + room + ".log"))) {
+                     new BufferedReader(new FileReader(tmp.getFileName()))) {
             while (fileIn.ready()) {
-                String tmp = fileIn.readLine();
-                result.add(tmp);
+                String temp = fileIn.readLine();
+                result.add(temp);
             }
         }
         return result;
     }
 
+    List<String> getAllHistory() throws IOException {
+        ArrayList<String> result = new ArrayList<>();
+        for(int i = 0; i <= current; i++) {
+            FileSaver tmp = (FileSaver) savers.get(i);
+            result.addAll(getHistory(i));
+        }
+        return result;
+    }
+
+
     public void close() throws IOException {
-        saver.close();
+        savers.forEach(s -> {
+            try {
+                s.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }

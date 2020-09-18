@@ -10,12 +10,14 @@ import java.io.*;
 public class FileSaver implements Saver {
     String fileName;
     boolean append = true;
-    final OutputStreamWriter Writer;
+    public int lines;
+    OutputStreamWriter Writer = null;
 
     /**
      * @param {@code String} fileName
      * @throws IOException
      */
+
     public FileSaver(String s) throws IOException {
         fileName = s;
         this.Writer = new OutputStreamWriter(new FileOutputStream(fileName, true));
@@ -41,10 +43,15 @@ public class FileSaver implements Saver {
     @Override
     public void save(ChatMessage msg) throws IOException {
        Writer.write(msg.toString() + System.lineSeparator());
+       lines++;
     }
 
     public String getFileName() {
         return fileName;
+    }
+
+    public void setFileName(String name) {
+        fileName = name;
     }
 
     public void close() throws IOException {
