@@ -48,14 +48,15 @@ public class MessageProcessor {
             ChatMessage chatMessage = new ChatMessage(inputMessage, client.getUserId(), System.currentTimeMillis());
 
             if (chatMessage.isCommandAvailiable()) {
-                if (chatMessage.getChangedId()) {
-                    client.setUserId(chatMessage.getChid());
-                    System.out.println("UserId successfully changed");
-                }
                 sendMessageToServer(chatMessage.toJSON(), clientConnection);
                 if ("/exit".equals(chatMessage.getMessageType())) {
                     clientConnection.close();
                     break;
+                }
+                if (chatMessage.getChangedId()) {
+                    client.setUserId(chatMessage.getChid());
+                    System.out.println("UserId successfully changed");
+                    continue;
                 }
             } else {
                 System.out.println("Wrong Command! Try again");
