@@ -41,9 +41,9 @@ public class Logger {
 
     public List<String> getHistory(int page) throws IOException {
         ArrayList<String> result = new ArrayList<>();
-        FileSaver tmp = (FileSaver) savers.get(page);
         if (page == -1)
             return getAllHistory();
+        FileSaver tmp = (FileSaver) savers.get(page);
         try (BufferedReader fileIn =
                      new BufferedReader(new FileReader(tmp.getFileName()))) {
             while (fileIn.ready()) {
