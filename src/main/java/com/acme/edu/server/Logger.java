@@ -36,7 +36,7 @@ public class Logger {
     public List<String> getHistory(String room) throws IOException {
         ArrayList<String> result = new ArrayList<>();
         try (BufferedReader fileIn =
-                     new BufferedReader(new FileReader("history" + room + ".log"))) {
+                     new BufferedReader(new FileReader("history_" + room + ".log"))) {
             while (fileIn.ready()) {
                 String tmp = fileIn.readLine();
                 result.add(tmp);
