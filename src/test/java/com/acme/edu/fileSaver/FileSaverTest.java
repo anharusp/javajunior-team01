@@ -30,7 +30,7 @@ public class FileSaverTest {
 
     @Test
     public void shouldCreateFileForFileSaverWhenConstructorCalls() {
-        assertThat(testFile.exists());
+        assertThat(testFile.exists()).isTrue();
     }
 
     @Test

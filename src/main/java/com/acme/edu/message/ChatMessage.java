@@ -123,6 +123,7 @@ public class ChatMessage {
                     this.clientEntity.setRoomId(message.split(" ", 2)[1]);
                     this.changedRoom = true;
                     break;
+                default:
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             this.messageType = "/non";
