@@ -13,13 +13,13 @@ import java.util.Date;
  */
 public class ChatMessage {
     private static Gson gson = new Gson();
-    //private String chid;
     private String messageText;
     private String messageType;
     private long messageDateTimeMilliseconds;
     private ClientEntity clientEntity = new ClientEntity();
     private boolean changedId = false;
     private boolean changedRoom = false;
+    private String reciever;
 
     /**
      * Create {@code ChatMessage} instance
@@ -36,8 +36,12 @@ public class ChatMessage {
     /**
      * @return {@code String} presentation of message in format "date&time user id message"
      */
+    /**
+     * @return {@code String} presentation of message in format "date&time user id message"
+     */
     @Override
     public String toString() {
+        if (reciever != null) return decorateDateTime() + decoratedIdWithReciever() + messageText;
         return decorateDateTime() + decoratedId() + messageText;
     }
 
@@ -48,12 +52,16 @@ public class ChatMessage {
         return clientEntity.getUserId();
     }
 
+    public String getRoom() {
+        return clientEntity.getRoomId();
+    }
+
     /**
      * @return {@code boolean}
      */
     public boolean isCommandAvailiable(){
         return "/snd".equals(messageType) || "/hist".equals(messageType) || "/exit".equals(messageType) || "/chid".equals(messageType)
-                || "/sdnp".equals(messageType) || "/chroom".equals(messageType);
+                || "/sndp".equals(messageType) || "/chroom".equals(messageType);
     }
 
     /**
@@ -86,6 +94,10 @@ public class ChatMessage {
         return changedId;
     }
 
+    public boolean isChangedRoom() {
+        return changedRoom;
+    }
+
     /**
      * Parsing command
      * @param {@code String} message
@@ -103,8 +115,14 @@ public class ChatMessage {
                     break;
                 case "/exit":
                     break;
+                case "/sndp":
+                    this.reciever = message.split(" ", 3)[1];
+                    this.messageText = message.split(" ", 3)[2];
+                    break;
                 case "/chroom":
                     this.clientEntity.setRoomId(message.split(" ", 2)[1]);
+                    this.changedRoom = true;
+                    break;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No such command detected");
@@ -119,5 +137,9 @@ public class ChatMessage {
 
     private String decoratedId() {
         return "(" + clientEntity.getUserId() + "): ";
+    }
+
+    private String decoratedIdWithReciever() {
+        return "(" + clientEntity.getUserId() + "->" + reciever + "): ";
     }
 }
