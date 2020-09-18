@@ -6,6 +6,7 @@ import com.acme.edu.server.Logger;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Set;
 
 public class HistoryStrategy implements Strategy {
     @Override
-    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
+    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException {
         Logger logger = new Logger();
         DataOutputStream output = clientConnection.getOutput();
         List<String> res = logger.getHistory();
