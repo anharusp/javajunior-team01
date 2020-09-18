@@ -30,22 +30,18 @@ public class LoggerTest {
 
     @Test
     public void shouldGetHistoryWhenFileEmpty() throws IOException {
-        File testFile = new File("test.log");
-        Logger logger = new Logger(new FileSaver(testFile));
-        assertThat(logger.getHistory().isEmpty());
+        Logger logger = new Logger("default");
+        assertThat(logger.getHistory("default").isEmpty());
         logger.close();
-        testFile.delete();
     }
 
     @Test
     public void shouldGetHistoryWhenLoggerLogged() throws IOException {
-        File testFile = new File("test.log");
-        Logger logger = new Logger(new FileSaver(testFile));
+        Logger logger = new Logger("default");
         ChatMessage mock = mock(ChatMessage.class);
         logger.log(mock);
-        assertThat(logger.getHistory().contains(mock));
+        assertThat(logger.getHistory("default").contains(mock));
         logger.close();
-        testFile.delete();
     }
 }
 
