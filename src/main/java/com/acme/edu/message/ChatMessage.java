@@ -130,7 +130,6 @@ public class ChatMessage {
                     } catch (ArrayIndexOutOfBoundsException e) {
                         this.histNumber = -1;
                     }
-                    System.out.println(histNumber);
                     break;
                 case "/chroom":
                     this.clientEntity.setRoomId(message.split(" ", 2)[1]);

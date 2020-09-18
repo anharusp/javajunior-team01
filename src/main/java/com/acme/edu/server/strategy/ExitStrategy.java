@@ -17,7 +17,7 @@ public class ExitStrategy implements Strategy {
 
     @Override
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException, ClientExit {
-        Logger logger = new Logger();
+        //Logger logger = new Logger();
         /*DataInputStream input = clientConnection.getInput();
         DataOutputStream output = clientConnection.getOutput();
         logger.log(message);
