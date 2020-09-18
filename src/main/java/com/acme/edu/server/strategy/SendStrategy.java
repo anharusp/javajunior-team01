@@ -4,9 +4,9 @@ import com.acme.edu.connection.NetConnection;
 import com.acme.edu.message.ChatMessage;
 import com.acme.edu.server.Logger;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,8 +20,8 @@ public class SendStrategy implements Strategy {
     }
 
     @Override
-    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
-        Logger logger = new Logger();
+    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException {
+        Logger logger = new Logger(message.getRoom());
         netConnectionSet.forEach((connection) -> {
             DataOutputStream output = connection.getOutput();
             try {
