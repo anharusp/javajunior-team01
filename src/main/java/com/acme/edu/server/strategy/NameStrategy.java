@@ -20,7 +20,9 @@ public class NameStrategy implements Strategy {
 
     @Override
     public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet, Map<String, NetConnection> nameToConnection) throws IOException, ClientExit {
+        System.out.println("here");
         if (isChanged && !nameToConnection.containsKey(chid)) {
+            netConnectionSet.remove(clientConnection);
             if (nameToConnection.containsValue(clientConnection)) {
                 final String[] previousName = new String[1];
                 nameToConnection.forEach((String key, NetConnection value) -> {
@@ -30,6 +32,12 @@ public class NameStrategy implements Strategy {
                 nameToConnection.remove(previousName[0]);
             }
             nameToConnection.put(chid, clientConnection);
+            netConnectionSet.add(clientConnection);
+            clientConnection.getOutput().writeUTF("/true");
         }
+        else {
+            clientConnection.getOutput().writeUTF("/false");
+        }
+        clientConnection.getOutput().flush();
     }
 }

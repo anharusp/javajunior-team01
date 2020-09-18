@@ -65,8 +65,15 @@ public class MessageProcessor {
                     break;
                 }
                 if (chatMessage.getChangedId()) {
-                    client.setUserId(chatMessage.getChid());
-                    System.out.println("UserId successfully changed");
+                reader.waitABit();
+                    String canChange = clientConnection.getInput().readUTF();
+                    if ("/true".equals(canChange)) {
+                        client.setUserId(chatMessage.getChid());
+                        System.out.println("UserId successfully changed");
+                    } else {
+                        System.out.println("This name is taken!");
+                    }
+                    reader.canResume();
                     continue;
                 }
                 if (chatMessage.isChangedRoom()) {
@@ -78,6 +85,7 @@ public class MessageProcessor {
                 System.out.println("Wrong Command! Try again");
                 continue;
             }
+
         }
         br.close();
     }
@@ -97,6 +105,7 @@ public class MessageProcessor {
             throw new IOException();
         }
         clientConnection.getOutput().writeUTF(jsonMessage);
+        clientConnection.getOutput().flush();
     }
 
 }
@@ -104,6 +113,7 @@ public class MessageProcessor {
 class Reader extends Thread {
     private Thread actualWorker;
     private AtomicBoolean running = new AtomicBoolean(false);
+    private AtomicBoolean waiting = new AtomicBoolean(false);
 
     public Reader(Runnable target) {
         this.actualWorker = new Thread(target);
@@ -114,10 +124,21 @@ class Reader extends Thread {
         actualWorker.interrupt();
     }
 
+    public boolean waitABit() {
+        waiting.set(true);
+        actualWorker.interrupt();
+        return true;
+    }
+
+    public void canResume() {
+        waiting.set(false);
+    }
+
     public void run() {
         running.set(true);
         while (running.get()) {
-            actualWorker.run();
+            if (!waiting.get())
+                actualWorker.run();
         }
     }
 }

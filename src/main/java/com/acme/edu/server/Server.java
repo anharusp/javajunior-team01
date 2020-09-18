@@ -69,6 +69,7 @@ class ClientServer extends Thread {
         while(clientConnection.isConnected()) {
             String json = input.readUTF();
             ChatMessage message = gson.fromJson(json, ChatMessage.class);
+            nameToConnection.put(message.getChid(), clientConnection);
             try {
                 Strategy strategy = StrategyBuilder.create(message);
                 strategy.play(clientConnection, netConnectionSet, nameToConnection);

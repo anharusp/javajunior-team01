@@ -13,10 +13,8 @@ public class StrategyBuilder {
             return new PrivateSendStrategy(message); 
         if ("/snd".equals(message.getMessageType()))
             return new SendStrategy(message);
-        if ("/chid".equals(message.getMessageType())) {
+        if ("/chid".equals(message.getMessageType()))
             return new NameStrategy(message);
-        } else {
-            throw new UnrecognizedStrategyException("Request not recognized");
-        }
+        throw new UnrecognizedStrategyException("Request not recognized");
     }
 }
