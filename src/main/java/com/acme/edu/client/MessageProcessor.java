@@ -16,6 +16,11 @@ public class MessageProcessor {
     private NetConnection connection;
     private String inputMessage;
     private ClientEntity client;
+
+    public static void setBr(BufferedReader br) {
+        MessageProcessor.br = br;
+    }
+
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     /**
