@@ -10,39 +10,58 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class Server {
 
-    public static void main(String[] args)  {
+    private static Set<NetConnection> netConnectionSet;
+
+    public static void main(String[] args) {
         ExecutorService pool = newFixedThreadPool(100);
         Thread shutdownHook = new Thread(() -> pool.shutdownNow());
         Runtime.getRuntime().addShutdownHook(shutdownHook);
-        try (final ServerSocket connectionPortListener = new ServerSocket(10_000)){
+
+        netConnectionSet = Collections.synchronizedSet(new HashSet<NetConnection>());
+        try (final ServerSocket connectionPortListener = new ServerSocket(10_000)) {
             while (true) {
-                NetConnection clientConnection = new NetConnection(connectionPortListener.accept());
-                ClientServer clientServer = new ClientServer(clientConnection);
-                pool.submit(new ClientServer(clientConnection));
-                clientConnection.close();
+                makeAndServeConnection(connectionPortListener, pool);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void makeAndServeConnection(ServerSocket connectionPortListener, ExecutorService pool) {
+        NetConnection clientConnection = null;
+        try {
+            clientConnection = new NetConnection(connectionPortListener.accept());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (clientConnection != null) {
+            netConnectionSet.add(clientConnection);
+            Thread clientThread = new ClientServer(clientConnection, netConnectionSet);
+            clientThread.start();
         }
     }
 }
 
 
 class ClientServer extends Thread {
+    private Set<NetConnection> netConnectionSet;
     NetConnection netConnection;
 
-    public ClientServer(NetConnection netConnection) {
+    public ClientServer(NetConnection netConnection, Set<NetConnection> netConnectionSet) {
         this.netConnection = netConnection;
+        this.netConnectionSet = netConnectionSet;
     }
 
-    private void serveClient(NetConnection clientConnection) throws IOException {
+    private void serveClient(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
         Gson gson = new Gson();
         DataInputStream input = clientConnection.getInput();
         while(clientConnection.isConnected()) {
@@ -50,7 +69,7 @@ class ClientServer extends Thread {
             ChatMessage message = gson.fromJson(json, ChatMessage.class);
             try {
                 Strategy strategy = StrategyBuilder.create(message);
-                strategy.play(clientConnection);
+                strategy.play(clientConnection, netConnectionSet);
             } catch (UnrecognizedStrategyException e) {
                 e.printStackTrace();
             } catch (ClientExit clientExit) {
@@ -62,9 +81,15 @@ class ClientServer extends Thread {
     @Override
     public void run() {
         try {
-            serveClient(netConnection);
+            serveClient(netConnection, netConnectionSet);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            netConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        netConnectionSet.remove(netConnection);
     }
 }

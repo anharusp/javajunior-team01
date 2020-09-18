@@ -7,6 +7,7 @@ import com.acme.edu.server.Logger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 public class SendStrategy implements Strategy {
     private final ChatMessage message;
@@ -16,13 +17,18 @@ public class SendStrategy implements Strategy {
     }
 
     @Override
-    public void play(NetConnection clientConnection) throws IOException {
+    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
         Logger logger = new Logger();
-        DataInputStream input = clientConnection.getInput();
-        DataOutputStream output = clientConnection.getOutput();
+        netConnectionSet.forEach((connection) -> {
+            DataOutputStream output = connection.getOutput();
+            try {
+                output.writeUTF(message.toString());
+                output.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         logger.log(message);
-        output.writeUTF(message.toString());
-        output.flush();
         logger.close();
     }
 }

@@ -7,10 +7,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class HistoryStrategy implements Strategy {
     @Override
-    public void play(NetConnection clientConnection) throws IOException {
+    public void play(NetConnection clientConnection, Set<NetConnection> netConnectionSet) throws IOException {
         Logger logger = new Logger();
         DataInputStream input = clientConnection.getInput();
         DataOutputStream output = clientConnection.getOutput();
